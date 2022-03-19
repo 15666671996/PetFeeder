@@ -1,2 +1,10 @@
 server:
   port: 8000
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://23.96.114.177:3306/pet_feeder?&useUnicode=true&charaterEncoding=utf-8

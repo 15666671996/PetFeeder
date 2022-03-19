@@ -1,7 +1,9 @@
 $(document).ready(function () {
     $("#testBtn").click(function () {
-        alert("yes");
+        // alert("yes");
+        $.post("/ttt",{},function (data) {
 
+        });
     });
 
 
