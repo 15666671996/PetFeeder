@@ -17,7 +17,7 @@ public class Auth_Controller {
     private Auth_Service_Interface service;
 
     @RequestMapping("/login")
-    public boolean login(String username,String password){
+    public HashMap<String, Object> login(String username, String password){
         System.out.println(username+"==="+password);
         return service.login(new User(username,password));
 
@@ -35,10 +35,10 @@ public class Auth_Controller {
 
         return map;
     }
-    @RequestMapping("/ttt")
-    public void test(){
-        System.out.println("ttt");
-        service.ttt();
+    @RequestMapping("/getPhoto")
+    public byte[] test(){
+        System.out.println("getPhoto");
+        return service.getPhoto();
     }
 
 

@@ -1,11 +1,14 @@
 $(document).ready(function () {
-    $("#testBtn").click(function () {
-        // alert("yes");
-        $.post("/ttt",{},function (data) {
-
+    $("#login").click(function () {
+        $.post("/login", {username: "tester", password: "123456"}, function (data) {
+            console.log(data);
+            $("#display").text(data);
         });
     });
 
+    $("#testBtn").click(function () {
+        $("#photo").attr("src", "/getPhoto");
+    });
 
 
 });

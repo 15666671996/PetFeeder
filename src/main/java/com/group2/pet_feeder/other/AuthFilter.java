@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @WebFilter(urlPatterns = {"/tttttttttttttt/*"})
 public class AuthFilter implements Filter {
-    private String pathWhiteList[] = new String[]{
+    private String whiteList[] = new String[]{
             "/lib/jquery-3.6.0.min.js",
             "/favicon.ico",
 
@@ -29,7 +29,7 @@ public class AuthFilter implements Filter {
         String uri = request.getRequestURI();
         System.out.println(uri);
 
-        if (isWhiteList(uri)) {
+        if (inWhiteList(uri)) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             // login status check
@@ -39,6 +39,7 @@ public class AuthFilter implements Filter {
                 // check Ajax request
                 if ("XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"))) {
                     response.getWriter().write("Haven't login");
+                    response.setStatus(401);
                 } else {
                     response.sendRedirect(request.getContextPath() + "/index.html");
                 }
@@ -48,8 +49,8 @@ public class AuthFilter implements Filter {
 
     }
 
-    private boolean isWhiteList(String uri) {
-        for (String path : pathWhiteList) {
+    private boolean inWhiteList(String uri) {
+        for (String path : whiteList) {
             if (path.equals(uri)) {
                 return true;
             }
