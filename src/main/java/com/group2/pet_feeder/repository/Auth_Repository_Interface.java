@@ -6,4 +6,8 @@ import java.util.HashMap;
 
 public interface Auth_Repository_Interface {
     HashMap<String, Object> login(User user);
+
+    HashMap<String, Object> register(User user);
+
+    HashMap<String, Object> checkUsername(String username);
 }

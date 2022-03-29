@@ -9,4 +9,9 @@ public interface Auth_Service_Interface {
     HashMap<String, Object> login(User user);
 
     byte[] getPhoto();
+
+    HashMap<String, Object> register(User user);
+
+    HashMap<String, Object> checkUsername(String username);
+
 }

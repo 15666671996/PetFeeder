@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Objects;
@@ -25,8 +24,8 @@ public class Auth_Service implements Auth_Service_Interface {
         HashMap<String, Object> rtn = repository.login(user);
         if ("success".equals(rtn.get("message"))) {
             HttpSession session = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest().getSession();
-            session.setAttribute("currentUser", user.getUsername());
-            System.out.println("成功");
+            session.setAttribute("operator", user.getUsername());
+            System.out.println("log in success");
         }
         return rtn;
     }
@@ -36,5 +35,16 @@ public class Auth_Service implements Auth_Service_Interface {
 //        repository.getPhoto();
         HttpClient client = new HttpClient(new RestTemplateBuilder());
         return client.getPhoto();
+    }
+
+    @Override
+    public HashMap<String, Object> register(User user) {
+        HashMap<String, Object> rtn = repository.register(user);
+        return rtn;
+    }
+
+    @Override
+    public HashMap<String, Object> checkUsername(String username) {
+        return repository.checkUsername(username);
     }
 }

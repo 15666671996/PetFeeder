@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/tttttttttttttt/*"})
+@WebFilter(urlPatterns = {"/*"})
 public class AuthFilter implements Filter {
     private String whiteList[] = new String[]{
             "/lib/jquery-3.6.0.min.js",
@@ -16,8 +16,11 @@ public class AuthFilter implements Filter {
             "/",
             "/index.html",
             "/index.js",
+            "/unauthorized.html",
 
-            "/login"
+            "/login",
+            "/register",
+            "/checkUsername"
 
     };
 
@@ -33,7 +36,7 @@ public class AuthFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             // login status check
-            if (session != null && session.getAttribute("user") != null) {
+            if (session != null && session.getAttribute("operator") != null) {
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
                 // check Ajax request
@@ -41,7 +44,7 @@ public class AuthFilter implements Filter {
                     response.getWriter().write("Haven't login");
                     response.setStatus(401);
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/index.html");
+                    response.sendRedirect(request.getContextPath() + "/unauthorized.html");
                 }
             }
         }
