@@ -6,9 +6,13 @@ $(document).ready(function () {
         });
     });
 
-    $("#testBtn").click(function () {
+    $("#getImage").click(function () {
         $("#photo").attr("src", "/getPhoto");
     });
-
+    $("#testBtn").click(function () {
+        $.post("/test",{},function (data) {
+            console.log(data)
+        });
+    });
 
 });

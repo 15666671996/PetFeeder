@@ -7,9 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 
 @CrossOrigin("*")
@@ -38,11 +35,5 @@ public class Auth_Controller {
     public HashMap<String, Object> checkUsername(String username) {
         return service.checkUsername(username);
     }
-
-    @RequestMapping(value = "/photo.jpg", produces = MediaType.IMAGE_JPEG_VALUE)
-    public byte[] getPhoto() {
-        return service.getPhoto();
-    }
-
 
 }

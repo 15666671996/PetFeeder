@@ -1,6 +1,6 @@
+#23.96.114.177
 server:
   port: 8000
-
 
 spring:
   datasource:

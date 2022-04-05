@@ -25,6 +25,7 @@ public class Auth_Repository implements Auth_Repository_Interface {
             List<Map<String, Object>> result = template.queryForList(sql, user.getUsername(), user.getPassword());
             if (result.size() > 0) {
                 rtn.put("message", "success");
+                rtn.put("userId",result.get(0).get("userId"));
             } else {
                 rtn.put("message", "Incorrect username or password");
             }
@@ -39,7 +40,7 @@ public class Auth_Repository implements Auth_Repository_Interface {
     public HashMap<String, Object> register(User user) {
         HashMap<String, Object> rtn = new HashMap<>();
         try {
-            String sql = "insert into user(userID,username,password) values (?,?,?)";
+            String sql = "insert into user(userId,username,password) values (?,?,?)";
             template.update(sql, ID_Generator.getUUID(), user.getUsername(), user.getPassword());
             rtn.put("message", "success");
         } catch (DataAccessException e) {

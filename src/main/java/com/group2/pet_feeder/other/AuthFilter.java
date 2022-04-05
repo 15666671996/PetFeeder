@@ -36,7 +36,7 @@ public class AuthFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             // login status check
-            if (session != null && session.getAttribute("operator") != null) {
+            if (session != null && session.getAttribute("userId") != null) {
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
                 // check Ajax request
