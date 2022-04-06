@@ -33,7 +33,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - id: build-and-push
+      - id: build-and-push-server
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
@@ -42,7 +42,7 @@ jobs:
           tags: pet-feeder-server
           labels: main
 
-      - id: build-and-push
+      - id: build-and-push-cv
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           file: "{context}/py/Dockerfile"
