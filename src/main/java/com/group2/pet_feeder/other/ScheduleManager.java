@@ -1,6 +1,7 @@
 package com.group2.pet_feeder.other;
 
 import com.group2.pet_feeder.entity.Task;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 
 import java.time.LocalTime;
 import java.util.*;
@@ -40,35 +41,40 @@ public class ScheduleManager {
             }
         });
         queue = Collections.synchronizedList(list);
-        System.out.println(queue);
-        execute();
-
+        if (queue.size() > 0) {
+            execute();
+        }
     }
 
     public static void execute() {
         LocalTime now = LocalTime.now();
         Task task = queue.get(0);
-        queue.add(task);
+        System.out.println(task);
         LocalTime time = task.getTime();
-        long ms;
-        if (now.compareTo(time) < 0) {
-            LocalTime delay = time
-                    .minusHours(now.getHour())
-                    .minusMinutes(now.getMinute())
-                    .minusSeconds(now.getSecond())
-                    .minusNanos(now.getNano());
-            ms = delay.getHour() * 60L * 60 * 1000 +
-                    delay.getMinute() * 60 * 1000 +
-                    delay.getSecond() * 1000 +
-                    delay.getNano() / 1000000;
-        } else {
-            ms = 0;
-        }
-        System.out.println(ms);
+        LocalTime delay = time
+                .minusHours(now.getHour())
+                .minusMinutes(now.getMinute())
+                .minusSeconds(now.getSecond())
+                .minusNanos(now.getNano());
+        long ms = delay.getHour() * 60L * 60 * 1000 +
+                delay.getMinute() * 60 * 1000 +
+                delay.getSecond() * 1000 +
+                delay.getNano() / 1000000;
+        System.out.println(queue);
+        System.out.println("--------------------------------");
+        System.out.println(task + "will be executed after" + ms / 1000 + "s");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                System.out.println(task);
+                System.out.println("scheduled task executed id:" + task.getUserId() + "time:" + task.getTime());
+                HttpClient client = new HttpClient(new RestTemplateBuilder());
+                try {
+                    client.serveFood(task.getUserId());
+                } catch (Exception e) {
+                    System.out.println("Error");
+                }
+                queue.remove(0);
+                queue.add(task);
                 execute();
             }
         }, ms);
@@ -80,6 +86,7 @@ public class ScheduleManager {
         int hour = Integer.parseInt(split[0]);
         int minute = Integer.parseInt(split[1]);
         Task newTask = new Task(userId, LocalTime.of(hour, minute));
+        boolean added = false;
         for (int i = 0; i < queue.size(); i++) {
 
             LocalTime now = LocalTime.now();
@@ -95,9 +102,18 @@ public class ScheduleManager {
                     .minusSeconds(now.getSecond())
                     .minusNanos(now.getNano());
             if (temp.compareTo(newTime) >= 0) {
-                queue.add(i + 1, newTask);
+                queue.add(i, newTask);
+                added = true;
+                if (i == 0) {
+                    timer.cancel();
+                    timer = new Timer();
+                    execute();
+                }
                 break;
             }
+        }
+        if (!added) {
+            queue.add(newTask);
         }
         System.out.println(queue);
     }
@@ -107,11 +123,14 @@ public class ScheduleManager {
         int hour = Integer.parseInt(split[0]);
         int minute = Integer.parseInt(split[1]);
         LocalTime localTime = LocalTime.of(hour, minute);
-        Iterator<Task> iterator = queue.iterator();
-        while (iterator.hasNext()){
-            Task next = iterator.next();
-            if(next.getUserId().equals(userId)&&next.getTime().compareTo(localTime)==0){
-                iterator.remove();
+        for (int i = 0; i < queue.size(); i++) {
+            if (queue.get(i).getUserId().equals(userId) && queue.get(i).getTime().compareTo(localTime) == 0) {
+                queue.remove(i);
+                if (i == 0) {
+                    timer.cancel();
+                    timer = new Timer();
+                    execute();
+                }
                 break;
             }
         }

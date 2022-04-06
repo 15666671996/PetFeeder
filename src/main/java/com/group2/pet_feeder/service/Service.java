@@ -1,5 +1,6 @@
 package com.group2.pet_feeder.service;
 
+import com.group2.pet_feeder.entity.Message;
 import com.group2.pet_feeder.other.HttpClient;
 import com.group2.pet_feeder.other.ScheduleManager;
 import com.group2.pet_feeder.repository.Repository;
@@ -30,6 +31,25 @@ public class Service {
         return client.getPhoto();
     }
 
+    public Message checkEmpty() {
+        HttpClient client = new HttpClient(new RestTemplateBuilder());
+        return client.checkEmpty();
+    }
+
+    public Message enablePump() {
+        HttpClient client = new HttpClient(new RestTemplateBuilder());
+        return client.enablePump();
+    }
+
+    public Message disablePump() {
+        HttpClient client = new HttpClient(new RestTemplateBuilder());
+        return client.disablePump();
+    }
+
+    public Message serveFood(String userId) {
+        HttpClient client = new HttpClient(new RestTemplateBuilder());
+        return client.serveFood(userId);
+    }
 
     public HashMap<String, Object> getTasks(String userId) {
         return repository.selectTaskById(userId);
@@ -50,4 +70,7 @@ public class Service {
         }
         return rtn;
     }
+
+
+
 }

@@ -11,7 +11,7 @@ from paho.mqtt import client as mqtt_client
 broker = 'mqtt.superfish.me'
 port = 1883
 topic = "esp32/photo"
-client_id = f'python-mqtt-1'
+client_id = f'python-mqtt-6'
 client = mqtt_client.Client(client_id)
 
 app = Flask(__name__)
@@ -45,7 +45,7 @@ def is_empty_req():
   diff_full = np.sum(np.abs(cur_dist - full_dist))
 
   resp = {
-      "empty": bool(diff_empty < diff_full)
+      "message": bool(diff_empty < diff_full)
   }
 
   print(resp)
@@ -60,6 +60,8 @@ def enable_pump():
   }
   client.publish("esp32/sub", json.dumps(payload))
 
+  return jsonify({"message":"success"})
+
 
 @app.route('/disable-pump')
 def disable_pump():
@@ -68,6 +70,7 @@ def disable_pump():
   }
   client.publish("esp32/sub", json.dumps(payload))
 
+  return jsonify({"message":"success"})
 
 @app.route('/serve-food')
 def serve_food():
@@ -76,6 +79,8 @@ def serve_food():
   }
 
   client.publish("esp32/sub", json.dumps(payload))
+
+  return jsonify({"message":"success"})
 
 
 def connect_mqtt():
