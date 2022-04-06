@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: pet-feeder
-  name: pet-feeder-service
+    app: pet-feeder-server
+  name: pet-feeder-server-service
 spec:
   type: LoadBalancer
   selector:
@@ -12,6 +12,21 @@ spec:
     - protocol: TCP
       port: 8080
       targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pet-feeder-cv
+  name: pet-feeder-cv-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: pet-feeder-cv
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
 ---
 apiVersion: v1
 kind: Service

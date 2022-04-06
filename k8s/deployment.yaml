@@ -17,6 +17,7 @@ spec:
       containers:
         - name: pet-feeder-server
           image: ghcr.io/15666671996/petfeederbackend/pet-feeder-server:main
+          imagePullPolicy: Always
           env:
             - name: PET_FEEDER_DB_ENDPOINT
               value: pet-feeder-db-service:3306
@@ -42,6 +43,7 @@ spec:
       containers:
         - name: pet-feeder-cv
           image: ghcr.io/15666671996/petfeederbackend/pet-feeder-cv:main
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
 ---
@@ -66,7 +68,7 @@ spec:
           image: docker.io/library/mariadb:10.6
           env:
             - name: MARIADB_ROOT_PASSWORD
-              value: 123456
+              value: "123456"
             - name: MARIADB_DATABASE
               value: pet_feeder
           ports:
@@ -79,6 +81,7 @@ spec:
       initContainers:
         - name: get-sql
           image: ghcr.io/15666671996/petfeederbackend/pet-feeder-server:main
+          imagePullPolicy: Always
           command: ["cp", "/app/tables.sql", "/shared"]
           volumeMounts:
             - name: shared

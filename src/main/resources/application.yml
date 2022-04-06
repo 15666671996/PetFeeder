@@ -7,4 +7,4 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 123456
-    url: jdbc:mysql://23.96.114.177:3306/pet_feeder?&useUnicode=true&charaterEncoding=utf-8
+    url: jdbc:mysql://${PET_FEEDER_DB_ENDPOINT}:3306/pet_feeder?&useUnicode=true&charaterEncoding=utf-8
