@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ScheduleManager {
 
-    private static List<Task> queue;
+    private static List<Task> queue =  Collections.synchronizedList(new   LinkedList<Task> ());
 
     private static Timer timer = new Timer();
 
@@ -40,7 +40,9 @@ public class ScheduleManager {
                 return t1.compareTo(t2);
             }
         });
-        queue = Collections.synchronizedList(list);
+        queue.addAll(list);
+
+//        queue = Collections.synchronizedList(list);
         if (queue.size() > 0) {
             execute();
         }
