@@ -21,6 +21,8 @@ spec:
           env:
             - name: PET_FEEDER_DB_ENDPOINT
               value: pet-feeder-db-service:3306
+            - name: CV_ENDPOINT
+              value: pet-feeder-cv-service:5001
           ports:
             - containerPort: 8080
 ---
