@@ -1,5 +1,11 @@
+FROM node:14 AS webapp-build
+ADD . /src
+RUN npm --prefix /src/webapp/ install
+RUN npm --prefix /src/webapp/ run build
+
 FROM maven:3.8-openjdk-8 AS build
 ADD . /src
+COPY --from=webapp-build /src/webapp/dist/ /src/src/main/resources/static/
 RUN mvn -f /src/pom.xml clean package
 
 FROM openjdk:8
