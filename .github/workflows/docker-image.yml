@@ -56,8 +56,8 @@ jobs:
       - id: build-and-push-cv
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          file: ${{context}}/py/Dockerfile
           context: .
+          file: ${{context}}/py/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           platforms: linux/amd64,linux/arm64
           labels: ${{ steps.meta-cv.outputs.labels }}
