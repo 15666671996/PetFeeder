@@ -58,5 +58,15 @@ public class Controller {
         return service.deleteTask((String) session.getAttribute("userId"), time);
     }
 
+    @RequestMapping("/updateTask")
+    public HashMap<String, Object> updateTask(String oldTime,String newTime, HttpSession session) {
+        HashMap<String, Object> rtn = service.deleteTask((String) session.getAttribute("userId"), oldTime);
+        if("success".equals(rtn.get("message"))){
+            return service.addTask((String) session.getAttribute("userId"), newTime);
+        }else {
+            return rtn;
+        }
+    }
+
 
 }

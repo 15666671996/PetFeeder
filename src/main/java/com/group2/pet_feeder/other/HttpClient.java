@@ -1,6 +1,7 @@
 package com.group2.pet_feeder.other;
 
 import com.group2.pet_feeder.entity.Message;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.client.RestTemplate;
 
@@ -11,34 +12,33 @@ public class HttpClient {
         this.template = restTemplateBuilder.build();
     }
 
-//    private static final String host = "http://pet-feeder-cv-service";
-    private static final String host = "http://127.0.0.1";
-    private static final String port = ":5000";
+    @Value("${cv-server.endpoint}")
+    private static final String endpoint = "127.0.0.1:5000";
 
     public byte[] getPhoto() {
-        String url = host + port + "/take-photo-req";
+        String url = "http://" + endpoint + "/take-photo-req";
         return template.getForObject(url, byte[].class);
     }
 
     public Message checkEmpty() {
-        String url = host + port +"/is-empty-req";
+        String url = "http://" + endpoint + "/is-empty-req";
         return template.getForObject(url, Message.class);
     }
 
     public Message enablePump() {
-        String url = host + port +"/enable-pump";
+        String url = "http://" + endpoint + "/enable-pump";
         return template.getForObject(url, Message.class);
     }
 
     public Message disablePump() {
-        String url = host + port +"/disable-pump";
+        String url = "http://" + endpoint + "/disable-pump";
         return template.getForObject(url, Message.class);
     }
 
     public Message serveFood(String userId) {
-        String url = host + port +"/serve-food";
+        String url = "http://" + endpoint + "/serve-food";
         Message message = checkEmpty();
-        if ("true".equals(message.getMessage())||true) {
+        if ("true".equals(message.getMessage()) || true) {
             return template.getForObject(url, Message.class);
         } else {
             message.setMessage("food is out!");
