@@ -102,9 +102,13 @@ def mqtt_run():
   client.loop_forever()
 
 
+def app_run():
+  app.run(host="0.0.0.0")
+
+
 if __name__ == '__main__':
   mqtt = threading.Thread(target=mqtt_run)
   mqtt.start()
 
-  flask = threading.Thread(target=app.run)
+  flask = threading.Thread(target=app_run)
   flask.start()
