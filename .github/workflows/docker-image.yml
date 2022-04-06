@@ -8,9 +8,8 @@ on:
     branches: [main]
 
 env:
-  IMAGE_NAME: ${{ github.repository }}
-  IMAGE_NAME_SERVER: ${{IMAGE_NAME}}/pet-feeder-server
-  IMAGE_NAME_CV: ${{IMAGE_NAME}}/pet-feeder-cv
+  IMAGE_NAME_SERVER: ${{ github.repository }}/pet-feeder-server
+  IMAGE_NAME_CV: ${{ github.repository }}/pet-feeder-cv
   REGISTRY: ghcr.io
 
 jobs:
