@@ -42,4 +42,12 @@ public class Service {
         }
         return rtn;
     }
+
+    public HashMap<String, Object> deleteTask(String userId, String time) {
+        HashMap<String, Object> rtn = repository.deleteTask(userId, time);
+        if ("success".equals(rtn.get("message"))) {
+            ScheduleManager.deleteTask(userId, time);
+        }
+        return rtn;
+    }
 }

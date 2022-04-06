@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ScheduleManager {
 
-    private static Vector<Task> queue;
+    private static List<Task> queue;
 
     private static Timer timer = new Timer();
 
@@ -39,7 +39,7 @@ public class ScheduleManager {
                 return t1.compareTo(t2);
             }
         });
-        queue = new Vector<>(list);
+        queue = Collections.synchronizedList(list);
         System.out.println(queue);
         execute();
 
@@ -80,7 +80,7 @@ public class ScheduleManager {
         int hour = Integer.parseInt(split[0]);
         int minute = Integer.parseInt(split[1]);
         Task newTask = new Task(userId, LocalTime.of(hour, minute));
-        for(int i =0;i<queue.size();i++){
+        for (int i = 0; i < queue.size(); i++) {
 
             LocalTime now = LocalTime.now();
             Task next = queue.get(i);
@@ -94,8 +94,25 @@ public class ScheduleManager {
                     .minusMinutes(now.getMinute())
                     .minusSeconds(now.getSecond())
                     .minusNanos(now.getNano());
-            if(temp.compareTo(newTime)>=0){
-                queue.add(i+1,newTask);
+            if (temp.compareTo(newTime) >= 0) {
+                queue.add(i + 1, newTask);
+                break;
+            }
+        }
+        System.out.println(queue);
+    }
+
+    public static void deleteTask(String userId, String time) {
+        String[] split = time.split(":");
+        int hour = Integer.parseInt(split[0]);
+        int minute = Integer.parseInt(split[1]);
+        LocalTime localTime = LocalTime.of(hour, minute);
+        Iterator<Task> iterator = queue.iterator();
+        while (iterator.hasNext()){
+            Task next = iterator.next();
+            if(next.getUserId().equals(userId)&&next.getTime().compareTo(localTime)==0){
+                iterator.remove();
+                break;
             }
         }
         System.out.println(queue);

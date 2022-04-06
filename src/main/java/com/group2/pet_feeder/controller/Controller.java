@@ -36,8 +36,7 @@ public class Controller {
 
     @RequestMapping("/deleteTask")
     public HashMap<String, Object> deleteTask(String time,HttpSession session) {
-
-        return null;
+        return service.deleteTask((String) session.getAttribute("userId"),time);
     }
 
 
