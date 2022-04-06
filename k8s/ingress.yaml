@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: pet-feeder-ingress
+  name: pet-feeder-server-ingress
 spec:
   rules:
     - http:
@@ -10,6 +10,22 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: pet-feeder-service
+                name: pet-feeder-server-service
                 port:
                   number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pet-feeder-cv-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: pet-feeder-cv-service
+                port:
+                  number: 5000

@@ -8,8 +8,8 @@ on:
     branches: [main]
 
 env:
-  IMAGE_NAME_SERVER: pet-feeder-server
-  IMAGE_NAME_CV: pet-feeder-cv
+  IMAGE_NAME_SERVER: ${{ github.repository }}/pet-feeder-server
+  IMAGE_NAME_CV: ${{ github.repository }}/pet-feeder-cv
   REGISTRY: ghcr.io
 
 jobs:
@@ -43,10 +43,11 @@ jobs:
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
+          file: ./Dockerfile.java
           push: ${{ github.event_name != 'pull_request' }}
           platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ steps.meta-server.outputs.labels }}
+          tags: ${{ steps.meta-server.outputs.tags }}
 
       - id: meta-cv
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
@@ -56,9 +57,9 @@ jobs:
       - id: build-and-push-cv
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          file: "{context}/py/Dockerfile"
           context: .
+          file: ./Dockerfile.py
           push: ${{ github.event_name != 'pull_request' }}
           platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ steps.meta-cv.outputs.labels }}
+          tags: ${{ steps.meta-cv.outputs.tags }}

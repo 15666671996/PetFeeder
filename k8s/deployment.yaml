@@ -1,22 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pet-feeder-deploy
+  name: pet-feeder-server-deploy
   labels:
-    app: pet-feeder
+    app: pet-feeder-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: pet-feeder
+      app: pet-feeder-server
   template:
     metadata:
       labels:
-        app: pet-feeder
+        app: pet-feeder-server
     spec:
       containers:
-        - name: pet-feeder
-          image: ghcr.io/15666671996/pet-feeder-server:main
+        - name: pet-feeder-server
+          image: ghcr.io/15666671996/petfeederbackend/pet-feeder-server:main
+          imagePullPolicy: Always
           env:
             - name: PET_FEEDER_DB_ENDPOINT
               value: pet-feeder-db-service:3306
@@ -41,7 +42,8 @@ spec:
     spec:
       containers:
         - name: pet-feeder-cv
-          image: ghcr.io/15666671996/pet-feeder-cv:main
+          image: ghcr.io/15666671996/petfeederbackend/pet-feeder-cv:main
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
 ---
@@ -66,7 +68,7 @@ spec:
           image: docker.io/library/mariadb:10.6
           env:
             - name: MARIADB_ROOT_PASSWORD
-              value: 123456
+              value: root
             - name: MARIADB_DATABASE
               value: pet_feeder
           ports:
@@ -78,7 +80,8 @@ spec:
               mountPath: /var/lib/mysql
       initContainers:
         - name: get-sql
-          image: ghcr.io/15666671996/PetFeederBackEnd:main
+          image: ghcr.io/15666671996/petfeederbackend/pet-feeder-server:main
+          imagePullPolicy: Always
           command: ["cp", "/app/tables.sql", "/shared"]
           volumeMounts:
             - name: shared
