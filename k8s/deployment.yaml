@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pet-feeder-deploy
+  labels:
+    app: pet-feeder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pet-feeder
+  template:
+    metadata:
+      labels:
+        app: pet-feeder
+    spec:
+      containers:
+        - name: pet-feeder
+          image: ghcr.io/15666671996/pet-feeder-server:main
+          env:
+            - name: PET_FEEDER_DB_ENDPOINT
+              value: pet-feeder-db-service:3306
+          ports:
+            - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pet-feeder-cv-deploy
+  labels:
+    app: pet-feeder-cv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pet-feeder-cv
+  template:
+    metadata:
+      labels:
+        app: pet-feeder-cv
+    spec:
+      containers:
+        - name: pet-feeder-cv
+          image: ghcr.io/15666671996/pet-feeder-cv:main
+          ports:
+            - containerPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pet-feeder-db-deploy
+  labels:
+    app: pet-feeder-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pet-feeder-db
+  template:
+    metadata:
+      labels:
+        app: pet-feeder-db
+    spec:
+      containers:
+        - name: pet-feeder-db
+          image: docker.io/library/mariadb:10.6
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              value: 123456
+            - name: MARIADB_DATABASE
+              value: pet_feeder
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: shared
+              mountPath: /docker-entrypoint-initdb.d
+            - name: mariadb-persistent-storage
+              mountPath: /var/lib/mysql
+      initContainers:
+        - name: get-sql
+          image: ghcr.io/15666671996/PetFeederBackEnd:main
+          command: ["cp", "/app/tables.sql", "/shared"]
+          volumeMounts:
+            - name: shared
+              mountPath: /shared
+      volumes:
+        - name: shared
+          emptyDir: {}
+        - name: mariadb-persistent-storage
+          persistentVolumeClaim:
+            claimName: pet-feeder-db-pvc
