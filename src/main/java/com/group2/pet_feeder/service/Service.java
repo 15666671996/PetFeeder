@@ -34,4 +34,12 @@ public class Service {
     public HashMap<String, Object> getTasks(String userId) {
         return repository.selectTaskById(userId);
     }
+
+    public HashMap<String, Object> addTask(String userId, String time) {
+        HashMap<String, Object> rtn = repository.insertTask(userId, time);
+        if ("success".equals(rtn.get("message"))) {
+            ScheduleManager.addTask(userId, time);
+        }
+        return rtn;
+    }
 }

@@ -44,4 +44,17 @@ public class Repository {
         }
         return rtn;
     }
+
+    public HashMap<String, Object> insertTask(String userId, String time) {
+        HashMap<String, Object> rtn = new HashMap<>();
+        try {
+            String sql = "insert into task(userId,time) values (?,?)";
+            template.update(sql, userId, time);
+            rtn.put("message", "success");
+        }catch (DataAccessException e) {
+            rtn.put("message", "Error");
+            System.out.println(e.getMessage());
+        }
+        return rtn;
+    }
 }

@@ -1,6 +1,6 @@
 package com.group2.pet_feeder.other;
 
-import com.group2.pet_feeder.entity.ScheduledTask;
+import com.group2.pet_feeder.entity.Task;
 
 import java.time.LocalTime;
 import java.util.*;
@@ -9,22 +9,22 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ScheduleManager {
 
-    private static ConcurrentLinkedQueue<ScheduledTask> queue;
+    private static Vector<Task> queue;
 
     private static Timer timer = new Timer();
 
     public static void init(List<Map<String, Object>> tasks) {
-        LinkedList<ScheduledTask> list = new LinkedList<>();
+        LinkedList<Task> list = new LinkedList<>();
         for (Map<String, Object> task : tasks) {
             String[] time = ((String) task.get("time")).split(":");
             int hour = Integer.parseInt(time[0]);
             int minute = Integer.parseInt(time[1]);
-            list.add(new ScheduledTask((String) task.get("userId"), LocalTime.of(hour, minute)));
+            list.add(new Task((String) task.get("userId"), LocalTime.of(hour, minute)));
         }
         LocalTime currentTime = LocalTime.now();
-        list.sort(new Comparator<ScheduledTask>() {
+        list.sort(new Comparator<Task>() {
             @Override
-            public int compare(ScheduledTask o1, ScheduledTask o2) {
+            public int compare(Task o1, Task o2) {
                 LocalTime t1 = o1.getTime()
                         .minusHours(currentTime.getHour())
                         .minusMinutes(currentTime.getMinute())
@@ -39,7 +39,7 @@ public class ScheduleManager {
                 return t1.compareTo(t2);
             }
         });
-        queue = new ConcurrentLinkedQueue<>(list);
+        queue = new Vector<>(list);
         System.out.println(queue);
         execute();
 
@@ -47,7 +47,7 @@ public class ScheduleManager {
 
     public static void execute() {
         LocalTime now = LocalTime.now();
-        ScheduledTask task = queue.poll();
+        Task task = queue.get(0);
         queue.add(task);
         LocalTime time = task.getTime();
         long ms;
@@ -68,16 +68,36 @@ public class ScheduleManager {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                doTask(task);
+                System.out.println(task);
                 execute();
             }
         }, ms);
     }
 
-    public static void doTask(ScheduledTask task) {
-        System.out.println(task);
 
+    public static void addTask(String userId, String time) {
+        String[] split = time.split(":");
+        int hour = Integer.parseInt(split[0]);
+        int minute = Integer.parseInt(split[1]);
+        Task newTask = new Task(userId, LocalTime.of(hour, minute));
+        for(int i =0;i<queue.size();i++){
+
+            LocalTime now = LocalTime.now();
+            Task next = queue.get(i);
+            LocalTime temp = next.getTime()
+                    .minusHours(now.getHour())
+                    .minusMinutes(now.getMinute())
+                    .minusSeconds(now.getSecond())
+                    .minusNanos(now.getNano());
+            LocalTime newTime = newTask.getTime()
+                    .minusHours(now.getHour())
+                    .minusMinutes(now.getMinute())
+                    .minusSeconds(now.getSecond())
+                    .minusNanos(now.getNano());
+            if(temp.compareTo(newTime)>=0){
+                queue.add(i+1,newTask);
+            }
+        }
+        System.out.println(queue);
     }
-
-
 }

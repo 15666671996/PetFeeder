@@ -25,8 +25,20 @@ public class Controller {
     }
 
     @RequestMapping("/getTasks")
-    public HashMap<String,Object> getTasks(HttpSession session){
+    public HashMap<String, Object> getTasks(HttpSession session) {
         return service.getTasks((String) session.getAttribute("userId"));
     }
+
+    @RequestMapping("/addTask")
+    public HashMap<String, Object> addTask(String time,HttpSession session) {
+        return service.addTask((String) session.getAttribute("userId"),time);
+    }
+
+    @RequestMapping("/deleteTask")
+    public HashMap<String, Object> deleteTask(String time,HttpSession session) {
+
+        return null;
+    }
+
 
 }
