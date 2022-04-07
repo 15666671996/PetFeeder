@@ -43,6 +43,16 @@ public class Controller {
         return service.disablePump();
     }
 
+    @RequestMapping("/getWaterStatus")
+    public HashMap<String, Object> getWaterStatus(){
+        return service.getWaterStatus();
+    }
+
+    @RequestMapping("/getWeightStatus")
+    public HashMap<String, Object> getWeightStatus(){
+        return service.getWeightStatus();
+    }
+
     @RequestMapping("/getTasks")
     public HashMap<String, Object> getTasks(HttpSession session) {
         return service.getTasks((String) session.getAttribute("userId"));

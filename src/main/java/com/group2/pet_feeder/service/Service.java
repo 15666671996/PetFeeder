@@ -72,5 +72,20 @@ public class Service {
     }
 
 
+    public HashMap<String, Object> getWaterStatus() {
+        HttpClient client = new HttpClient(new RestTemplateBuilder());
+        Message message = client.getWaterStatus();
+        HashMap<String, Object> rtn = new HashMap<>();
+        rtn.put("message",Integer.parseInt(message.getMessage()));
+        return rtn;
+    }
+
+    public HashMap<String, Object> getWeightStatus() {
+        HttpClient client = new HttpClient(new RestTemplateBuilder());
+        Message message = client.getWeightStatus();
+        HashMap<String, Object> rtn = new HashMap<>();
+        rtn.put("message",Integer.parseInt(message.getMessage()));
+        return rtn;
+    }
 
 }

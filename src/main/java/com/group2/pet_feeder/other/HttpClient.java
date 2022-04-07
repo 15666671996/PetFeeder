@@ -45,4 +45,14 @@ public class HttpClient {
         }
     }
 
+    public Message getWaterStatus() {
+        String url = "http://" + endpoint + "/water-status";
+        return template.getForObject(url, Message.class);
+    }
+
+    public Message getWeightStatus() {
+        String url = "http://" + endpoint + "/weight-status";
+        return template.getForObject(url, Message.class);
+    }
+
 }

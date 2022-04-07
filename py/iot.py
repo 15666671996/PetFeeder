@@ -10,10 +10,12 @@ from paho.mqtt import client as mqtt_client
 
 broker = 'mqtt.superfish.me'
 port = 1883
-topic = "esp32/photo"
+topic_photo = "esp32/photo"
+topic_pub = "esp32/pub"
 client_id = f'python-mqtt-6'
 client = mqtt_client.Client(client_id)
-
+global weight = 0
+global water  = 0
 app = Flask(__name__)
 
 
@@ -82,23 +84,47 @@ def serve_food():
 
   return jsonify({"message":"success"})
 
+@app.route('/water-status')
+def get_water():
+  payload = {
+    "message": str(water)
+  }
 
-def connect_mqtt():
-  def on_connect(client, userdata, flags, rc):
-    if rc == 0:
-      print("Connected to MQTT Broker!")
-    else:
-      print("Failed to connect, return code %d\n", rc)
+  return jsonify(payload)
 
-  def on_message(client, userdata, msg):
+
+@app.route('/weight-status')
+def get_weight():
+  payload = {
+    "message": str(weight)
+  }
+
+  return jsonify(payload)
+
+
+def on_connect(client, userdata, flags, rc):
+  if rc == 0:
+    print("Connected to MQTT Broker!")
+  else:
+    print("Failed to connect, return code %d\n", rc)
+
+def on_message(client, userdata, msg):
+  if client.topic == topic_photo:
     with open("tmp.jpg", "wb") as f:
       f.write(msg.payload)
+  elif client.topic == topic_pub:
+    obj = json.dumps(msg.payload)
+    water = obj["water"]
+    weight = obj["weight"]
 
+def connect_mqtt():
   client.on_connect = on_connect
   client.on_message = on_message
   client.connect(broker, port)
 
-  client.subscribe(topic)
+  client.subscribe(topic_photo)
+  client.subscribe(topic_pub)
+
   return client
 
 
