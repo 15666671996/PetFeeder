@@ -17,15 +17,15 @@ client = mqtt_client.Client(client_id)
 app = Flask(__name__)
 
 
-def get_dist(file):
+def get_hist(file):
   img = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
   roi = img[:, 20:-50]
-  dist = np.zeros((256), dtype=np.int32)
+  hist = np.zeros((256), dtype=np.int32)
   for r in roi:
     for c in r:
-      dist[c] = dist[c] + 1
+      hist[c] = hist[c] + 1
 
-  return dist
+  return hist
 
 
 @app.route('/take-photo-req')
@@ -37,12 +37,12 @@ def take_photo_req():
 def is_empty_req():
   img = cv2.imread("tmp.jpg", cv2.IMREAD_GRAYSCALE)
 
-  empty_dist = get_dist("template_empty.jpg")
-  full_dist = get_dist("template_full.jpg")
-  cur_dist = get_dist("tmp.jpg")
+  empty_hist = get_hist("template_empty.jpg")
+  full_hist = get_hist("template_full.jpg")
+  cur_hist = get_hist("tmp.jpg")
 
-  diff_empty = np.sum(np.abs(cur_dist - empty_dist))
-  diff_full = np.sum(np.abs(cur_dist - full_dist))
+  diff_empty = np.sum(np.abs(cur_hist - empty_hist))
+  diff_full = np.sum(np.abs(cur_hist - full_hist))
 
   resp = {
       "message": bool(diff_empty < diff_full)
