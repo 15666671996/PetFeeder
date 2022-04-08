@@ -31,9 +31,7 @@ CREATE TABLE `task`  (
 -- ----------------------------
 -- Records of task
 -- ----------------------------
-INSERT INTO `task` VALUES ('67069ad80b984e9aa9ab884b0f6262c2', '04:00');
-INSERT INTO `task` VALUES ('67069ad80b984e9aa9ab884b0f6262c2', '12:20');
-INSERT INTO `task` VALUES ('67069ad80b984e9aa9ab884b0f6262c2', '12:30');
+INSERT INTO `task` VALUES ('67069ad80b984e9aa9ab884b0f6262c2', '12:00');
 INSERT INTO `task` VALUES ('67069ad80b984e9aa9ab884b0f6262c2', '18:00');
 
 -- ----------------------------
