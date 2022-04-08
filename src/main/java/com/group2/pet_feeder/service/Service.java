@@ -48,7 +48,7 @@ public class Service {
 
     public Message serveFood(String userId) {
         HttpClient client = new HttpClient(new RestTemplateBuilder());
-        return client.serveFood(userId);
+        return client.serveFood(userId,true);
     }
 
     public HashMap<String, Object> getTasks(String userId) {

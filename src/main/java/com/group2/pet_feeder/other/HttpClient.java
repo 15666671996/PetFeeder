@@ -45,6 +45,11 @@ public class HttpClient {
         }
     }
 
+    public Message serveFood(String userId, boolean forced) {
+        String url = "http://" + endpoint + "/serve-food";
+        return template.getForObject(url, Message.class);
+    }
+
     public Message getWaterStatus() {
         String url = "http://" + endpoint + "/water-status";
         return template.getForObject(url, Message.class);
