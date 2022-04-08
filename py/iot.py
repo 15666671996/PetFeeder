@@ -22,7 +22,8 @@ app = Flask(__name__)
 
 def get_hist(file):
   img = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
-  roi = img[:, 20:-50]
+  roi = img[30:-30, 60:-80]
+  _, roi = cv2.threshold(roi, 0, 255, type=cv2.THRESH_OTSU)
   hist = np.zeros((256), dtype=np.int32)
   for r in roi:
     for c in r:

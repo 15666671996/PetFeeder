@@ -32,9 +32,11 @@ def get_hist(file):
 # plt.show()
 
 img = cv2.imread("template_full.jpg", cv2.IMREAD_GRAYSCALE)
-roi = img[:, 20:-50]
+roi = img[30:-30, 60:-80]
+_, roi = cv2.threshold(roi, 0, 255, type=cv2.THRESH_OTSU)
 cv2.imwrite("roi_full.jpg", roi)
 
 img = cv2.imread("template_empty.jpg", cv2.IMREAD_GRAYSCALE)
-roi = img[:, 20:-50]
+roi = img[30:-30, 60:-80]
+_, roi = cv2.threshold(roi, 0, 255, type=cv2.THRESH_OTSU)
 cv2.imwrite("roi_empty.jpg", roi)
