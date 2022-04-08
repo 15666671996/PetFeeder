@@ -2,6 +2,7 @@ import base64
 import json
 import tempfile
 import threading
+import uuid
 
 import cv2
 import numpy as np
@@ -12,10 +13,10 @@ broker = 'mqtt.superfish.me'
 port = 1883
 topic_photo = "esp32/photo"
 topic_pub = "esp32/pub"
-client_id = f'python-mqtt-6'
+client_id = f'python-mqtt-{uuid.uuid4()}'
 client = mqtt_client.Client(client_id)
-global weight = 0
-global water  = 0
+weight = 0
+water = 0
 app = Flask(__name__)
 
 
@@ -62,7 +63,7 @@ def enable_pump():
   }
   client.publish("esp32/sub", json.dumps(payload))
 
-  return jsonify({"message":"success"})
+  return jsonify({"message": "success"})
 
 
 @app.route('/disable-pump')
@@ -72,7 +73,8 @@ def disable_pump():
   }
   client.publish("esp32/sub", json.dumps(payload))
 
-  return jsonify({"message":"success"})
+  return jsonify({"message": "success"})
+
 
 @app.route('/serve-food')
 def serve_food():
@@ -82,12 +84,13 @@ def serve_food():
 
   client.publish("esp32/sub", json.dumps(payload))
 
-  return jsonify({"message":"success"})
+  return jsonify({"message": "success"})
+
 
 @app.route('/water-status')
 def get_water():
   payload = {
-    "message": str(water)
+      "message": str(water)
   }
 
   return jsonify(payload)
@@ -96,28 +99,29 @@ def get_water():
 @app.route('/weight-status')
 def get_weight():
   payload = {
-    "message": str(weight)
+      "message": str(weight)
   }
 
   return jsonify(payload)
 
 
-def on_connect(client, userdata, flags, rc):
-  if rc == 0:
-    print("Connected to MQTT Broker!")
-  else:
-    print("Failed to connect, return code %d\n", rc)
-
-def on_message(client, userdata, msg):
-  if client.topic == topic_photo:
-    with open("tmp.jpg", "wb") as f:
-      f.write(msg.payload)
-  elif client.topic == topic_pub:
-    obj = json.dumps(msg.payload)
-    water = obj["water"]
-    weight = obj["weight"]
-
 def connect_mqtt():
+  def on_connect(client, userdata, flags, rc):
+    if rc == 0:
+      print("Connected to MQTT Broker!")
+    else:
+      print("Failed to connect, return code %d\n", rc)
+
+  def on_message(client, userdata, msg):
+    if client.topic == topic_photo:
+      with open("tmp.jpg", "wb") as f:
+        f.write(msg.payload)
+    elif client.topic == topic_pub:
+      obj = json.dumps(msg.payload)
+      global water, weight
+      water = obj["water"]
+      weight = obj["weight"]
+
   client.on_connect = on_connect
   client.on_message = on_message
   client.connect(broker, port)
