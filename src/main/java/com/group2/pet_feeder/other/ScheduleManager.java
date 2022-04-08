@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ScheduleManager {
 
-    private static List<Task> queue =  Collections.synchronizedList(new   LinkedList<Task> ());
+    private static List<Task> queue = Collections.synchronizedList(new LinkedList<Task>());
 
     private static Timer timer = new Timer();
 
@@ -131,7 +131,9 @@ public class ScheduleManager {
                 if (i == 0) {
                     timer.cancel();
                     timer = new Timer();
-                    execute();
+                    if (queue.size() != 0) {
+                        execute();
+                    }
                 }
                 break;
             }
