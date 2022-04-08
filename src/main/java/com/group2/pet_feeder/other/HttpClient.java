@@ -40,7 +40,7 @@ public class HttpClient {
         if ("true".equals(message.getMessage())) {
             return template.getForObject(url, Message.class);
         } else {
-            message.setMessage("food is out!");
+            message.setMessage("food is enough!");
             return message;
         }
     }

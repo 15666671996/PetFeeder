@@ -14,7 +14,6 @@ import com.group2.pet_feeder.entity.Task;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 
-
 public class ScheduleManager {
 
     private static List<Task> queue = Collections.synchronizedList(new LinkedList<Task>());
@@ -29,7 +28,7 @@ public class ScheduleManager {
             int minute = Integer.parseInt(time[1]);
             list.add(new Task((String) task.get("userId"), LocalTime.of(hour, minute)));
         }
-        LocalTime currentTime = LocalTime.now();
+        LocalTime currentTime = LocalTime.now(ZoneId.of("Europe/Dublin"));
         list.sort(new Comparator<Task>() {
             @Override
             public int compare(Task o1, Task o2) {
@@ -49,14 +48,14 @@ public class ScheduleManager {
         });
         queue.addAll(list);
 
-//        queue = Collections.synchronizedList(list);
+        // queue = Collections.synchronizedList(list);
         if (queue.size() > 0) {
             execute();
         }
     }
 
     public static void execute() {
-        LocalTime now = LocalTime.now();
+        LocalTime now = LocalTime.now(ZoneId.of("Europe/Dublin"));
         Task task = queue.get(0);
         System.out.println(task);
         LocalTime time = task.getTime();
@@ -88,7 +87,6 @@ public class ScheduleManager {
             }
         }, ms);
     }
-
 
     public static void addTask(String userId, String time) {
         String[] split = time.split(":");
