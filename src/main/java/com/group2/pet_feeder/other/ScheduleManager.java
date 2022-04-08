@@ -1,11 +1,18 @@
 package com.group2.pet_feeder.other;
 
-import com.group2.pet_feeder.entity.Task;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-
 import java.time.LocalTime;
-import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import com.group2.pet_feeder.entity.Task;
+
+import org.springframework.boot.web.client.RestTemplateBuilder;
 
 
 public class ScheduleManager {
@@ -91,7 +98,7 @@ public class ScheduleManager {
         boolean added = false;
         for (int i = 0; i < queue.size(); i++) {
 
-            LocalTime now = LocalTime.now();
+            LocalTime now = LocalTime.now(ZoneId.of("Europe/Dublin"));
             Task next = queue.get(i);
             LocalTime temp = next.getTime()
                     .minusHours(now.getHour())

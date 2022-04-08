@@ -37,7 +37,7 @@ public class HttpClient {
     public Message serveFood(String userId) {
         String url = "http://" + endpoint + "/serve-food";
         Message message = checkEmpty();
-        if ("true".equals(message.getMessage()) || true) {
+        if ("true".equals(message.getMessage())) {
             return template.getForObject(url, Message.class);
         } else {
             message.setMessage("food is out!");

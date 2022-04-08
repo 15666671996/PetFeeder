@@ -50,7 +50,7 @@ public class AuthFilter implements Filter {
                     response.getWriter().write("Haven't login");
                     response.setStatus(401);
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/unauthorized.html");
+                    response.sendRedirect(request.getContextPath() + "/");
                 }
             }
         }
