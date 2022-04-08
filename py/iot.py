@@ -113,14 +113,16 @@ def connect_mqtt():
       print("Failed to connect, return code %d\n", rc)
 
   def on_message(client, userdata, msg):
-    if client.topic == topic_photo:
+    if msg.topic == topic_photo:
       with open("tmp.jpg", "wb") as f:
         f.write(msg.payload)
-    elif client.topic == topic_pub:
-      obj = json.dumps(msg.payload)
+    elif msg.topic == topic_pub:
+      payload = str(msg.payload, encoding="utf-8")
+      obj = json.loads(payload)
+
       global water, weight
-      water = obj["water"]
-      weight = obj["weight"]
+      water = obj["Water"]
+      weight = obj["Weight"]
 
   client.on_connect = on_connect
   client.on_message = on_message
